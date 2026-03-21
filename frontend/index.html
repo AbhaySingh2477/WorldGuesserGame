@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Guesser - Full Stack!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="loading" class="overlay flex-center">
+        <h2>Loading world data from server...</h2>
+    </div>
+
+    <div id="game-over" class="overlay flex-center" style="display: none;">
+        <div class="modal">
+            <h2>Game Over!</h2>
+            <h3>Total Score: <span id="final-score">0</span></h3>
+            <button onclick="startGame()">Play Again</button>
+        </div>
+    </div>
+
+    <div class="image-container">
+        <!-- Floating UI -->
+        <div class="floater">
+            <div class="floater-row">
+                <div>
+                    <div class="label">Round</div>
+                    <div class="value" id="round-display">1/5</div>
+                </div>
+                <div>
+                    <div class="label">Total Score</div>
+                    <div class="value" id="score-display">0</div>
+                </div>
+            </div>
+            <div class="value" id="round-points" style="color: #34d399; font-size: 1rem; opacity: 0; margin-top: 5px; transition: opacity 0.3s;"></div>
+        </div>
+
+        <img id="mystery-image" src="" alt="Where is this?">
+    </div>
+    
+    <div class="map-container">
+        <div id="map"></div>
+        <div class="controls">
+            <div class="info-row">
+                <span id="coordinates">Make your guess on the map!</span>
+            </div>
+            <h3 id="result"></h3>
+            <button id="action-btn" style="display: none;" onclick="handleAction()">Submit Guess</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

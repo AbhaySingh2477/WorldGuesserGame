@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+.venv/
+__pycache__/
+
+# Environment & Secrets (CRITICAL)
+.env
+.env.*
+*.json.key
+
+# Kaggle / Large Data Dumps
+coords.csv
+coords_*.csv
+*.zip
+backend/coords.csv
+backend/coords_*.csv
+
+# OS Files
+.DS_Store
+**/.DS_Store
+
+# Game Datasets
+# Note: monuments.json is around ~40kb and essential to the game runtime, so it is NOT ignored.

@@ -1,0 +1,176 @@
+:root {
+    --bg-color: #0f172a;
+    --panel-bg: #1e293b;
+    --text-color: #f8fafc;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --glass-bg: rgba(15, 23, 42, 0.6);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Overlays */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(15, 23, 42, 0.9);
+    z-index: 2000;
+}
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.modal {
+    background-color: var(--panel-bg);
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+}
+.modal h2 { margin-bottom: 8px; font-size: 2rem; color: white; }
+.modal h3 { margin-bottom: 24px; color: #94a3b8; }
+
+/* Split Screen Layout */
+.image-container {
+    flex: 1;
+    position: relative;
+    background-color: #000;
+}
+
+#mystery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+
+.map-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    background-color: var(--panel-bg);
+    position: relative;
+}
+
+#map {
+    flex: 1;
+    width: 100%;
+    z-index: 1;
+}
+
+.controls {
+    padding: 24px;
+    background-color: var(--panel-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 10;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#coordinates {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+#result {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    min-height: 24px;
+}
+
+button {
+    padding: 16px 24px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+button:disabled {
+    background-color: #475569;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Floating UI */
+.floater {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 16px 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.floater .label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.floater .value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+}
+
+.floater-row {
+    display: flex;
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    .image-container, .map-container {
+        flex: none;
+        height: 50vh;
+    }
+}
