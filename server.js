@@ -1,14 +1,15 @@
 const express = require('express');
 const cors = require('cors');
-const { exec } = require('child_process');
 const fs = require('fs');
-const csv = require('csv-parser');
+const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serve frontend static files
+app.use(express.static(__dirname));
 
 const DATASET_CACHE = [];
 let isDatasetReady = false;
