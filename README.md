@@ -2,6 +2,10 @@
 
 World Guesser is a full-stack, real-time web application where players test their geography knowledge by attempting to pinpoint the location of famous monuments on a world map. It features both a solo mode and a real-time, synchronized 1v1 multiplayer mode.
 
+**Live Website:** https://worldguessergame.onrender.com
+
+**Development Journal:** https://docs.google.com/document/d/1mzG-1sO7C_DuoI-cmlqvB0tLBWkxjhAqMpVugaRJwkk/edit?usp=sharing
+
 ## Features
 
 - **Solo Play:** A standard 5-round game where players score points based on the proximity of their guess to the actual location.
