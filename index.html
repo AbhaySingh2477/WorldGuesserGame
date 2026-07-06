@@ -3,55 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Guesser - Full Stack!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>World Guesser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
-    <div id="loading" class="overlay flex-center">
-        <h2>Loading world data from server...</h2>
+
+    <!-- Error Toast -->
+    <div id="error-toast" class="error-toast"></div>
+
+    <!-- Countdown Overlay -->
+    <div id="countdown-overlay">
+        <div id="countdown-number" class="countdown-number">3</div>
     </div>
 
-    <div id="game-over" class="overlay flex-center" style="display: none;">
-        <div class="modal">
-            <h2>Game Over!</h2>
-            <h3>Total Score: <span id="final-score">0</span></h3>
-            <button onclick="startGame()">Play Again</button>
+    <!-- Background for Menus -->
+    <div class="global-bg" id="global-bg"></div>
+
+    <!-- Menu Screen -->
+    <div id="menu-screen" class="screen active">
+        <div class="menu-container">
+            <h1 class="menu-logo">WorldGuesser</h1>
+            <div class="menu-separator"></div>
+            <input type="text" id="player-name-input" class="minimal-input" placeholder="Enter your name" maxlength="16" />
+            <div class="menu-separator"></div>
+            <nav class="menu-nav">
+                <a onclick="startSoloGame()">Singleplayer</a>
+                <div class="menu-separator"></div>
+                <a onclick="createRoom()">Create Party</a>
+                <a onclick="showScreen('join-screen')">Join Party</a>
+            </nav>
         </div>
     </div>
 
-    <div class="image-container">
-        <!-- Floating UI -->
-        <div class="floater">
-            <div class="floater-row">
-                <div>
-                    <div class="label">Round</div>
-                    <div class="value" id="round-display">1/5</div>
+    <!-- Join Screen -->
+    <div id="join-screen" class="screen">
+        <div class="menu-container">
+            <h1 class="menu-logo">Join Party</h1>
+            <div class="menu-separator"></div>
+            <input type="text" id="room-code-input" class="minimal-input" placeholder="Room Code" maxlength="6" />
+            <div class="menu-separator"></div>
+            <nav class="menu-nav">
+                <a onclick="joinRoom()">Join Match</a>
+                <a onclick="showScreen('menu-screen')" class="muted-link">Back</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Waiting Screen -->
+    <div id="waiting-screen" class="screen">
+        <div class="menu-container">
+            <h1 class="menu-logo">Waiting Room</h1>
+            <div class="menu-separator"></div>
+            <div class="waiting-info">
+                <div class="room-code-label">Room Code</div>
+                <div id="room-code-display" class="room-code-display">------</div>
+            </div>
+            <div class="menu-separator"></div>
+            <div id="waiting-players" class="waiting-players">
+                <div class="player-row"><span class="status-dot"></span><span id="wp-player1">You</span></div>
+                <div class="player-row empty"><span class="status-dot"></span><span id="wp-player2">Waiting...</span></div>
+            </div>
+            <div class="menu-separator"></div>
+            <nav class="menu-nav">
+                <a onclick="leaveRoom()" class="muted-link">Leave</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="overlay">
+        <div class="minimal-modal">
+            Loading...
+        </div>
+    </div>
+
+    <!-- Game Over (Solo) -->
+    <div id="gameover-overlay" class="overlay">
+        <div class="menu-container">
+            <h1 class="menu-logo">Game Over</h1>
+            <div class="menu-separator"></div>
+            <div class="final-score-box">
+                <span class="label">Score</span>
+                <span id="final-score" class="score-value">0</span>
+            </div>
+            <div class="menu-separator"></div>
+            <nav class="menu-nav">
+                <a onclick="backToMenu()">Play Again</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Game Over (Multiplayer) -->
+    <div id="mp-gameover-overlay" class="overlay">
+        <div class="menu-container">
+            <h1 id="mp-result-title" class="menu-logo">Results</h1>
+            <div class="menu-separator"></div>
+            <div id="mp-scoreboard" class="minimal-scoreboard"></div>
+            <div class="menu-separator"></div>
+            <nav class="menu-nav">
+                <a onclick="backToMenu()">Back to Menu</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="image-panel">
+            <div class="hud">
+                <div class="hud-item">
+                    <span class="hud-label">Round</span>
+                    <span class="hud-value" id="hud-round">1/5</span>
                 </div>
-                <div>
-                    <div class="label">Total Score</div>
-                    <div class="value" id="score-display">0</div>
+                <div class="hud-item">
+                    <span class="hud-label">Score</span>
+                    <span class="hud-value" id="hud-score">0</span>
+                </div>
+                <div class="hud-item" id="hud-timer" style="display: none;">
+                    <span class="hud-label">Time</span>
+                    <span class="hud-value" id="timer-display">30</span>
                 </div>
             </div>
-            <div class="value" id="round-points" style="color: #34d399; font-size: 1rem; opacity: 0; margin-top: 5px; transition: opacity 0.3s;"></div>
+            <img id="mystery-image" src="" alt="">
+            <div id="points-toast" class="points-toast"></div>
         </div>
 
-        <img id="mystery-image" src="" alt="Where is this?">
-    </div>
-    
-    <div class="map-container">
-        <div id="map"></div>
-        <div class="controls">
-            <div class="info-row">
-                <span id="coordinates">Make your guess on the map!</span>
+        <div class="map-panel">
+            <div id="map"></div>
+            <div class="map-controls">
+                <div id="mp-status-bar" class="mp-status">
+                    <div class="mp-player">
+                        <span id="mp-you-indicator" class="status-indicator thinking"></span>
+                        <span id="mp-you-name">You</span>
+                    </div>
+                    <div class="mp-vs">VS</div>
+                    <div class="mp-player">
+                        <span id="mp-opp-name">Opponent</span>
+                        <span id="mp-opp-indicator" class="status-indicator thinking"></span>
+                    </div>
+                </div>
+                <div class="controls-bottom">
+                    <div class="controls-info">
+                        <div id="coordinates">Make your guess on the map</div>
+                        <div id="result-text"></div>
+                    </div>
+                    <button id="action-btn" class="minimal-btn" style="display: none;" onclick="handleAction()">Submit</button>
+                </div>
             </div>
-            <h3 id="result"></h3>
-            <button id="action-btn" style="display: none;" onclick="handleAction()">Submit Guess</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
